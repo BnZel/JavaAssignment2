@@ -1,6 +1,4 @@
-package assignment2;
-
-import assignment2.Account;
+package javafxapplication1;
 
 public class Bank {
 
@@ -8,47 +6,46 @@ public class Bank {
     private int numAccounts;
     private int maxAccounts;
 
-    public Bank() {
+    public Bank(int max) {
 
-        maxAccounts = 1000;
+        maxAccounts = max;
         numAccounts = 0;
         accountList = new Account[maxAccounts];
 
     }
 
+    //PROBLEM?
     public boolean addAccount(long accNum, double bal, String own) {
-        if (numAccounts < maxAccounts) {
-            Account a = new Account(accNum, bal, own);
+        if (numAccounts >= maxAccounts) {
+        return false;
+        }   
+        
+         Account a = new Account(accNum, bal, own);
             accountList[numAccounts] = a;
             numAccounts++;
             return true;
-        }
-        return false;
+        
     }
-
     public int findAccount(long accNum) {
         for (int i = 0; i < numAccounts; i++) {
 
             if (accountList[i].getAccountNumber() == accNum) 
             {
                 return i;
+                
             }
         }
         return -1;
     }
 
+    //PROBLEM
     public String printAccounts() {
-        /*int acc = findAccount();
         
-        if(acc == -1){return "Account not found";}
-        return accountList[acc].toString();*/
-        //Account loc = accountList[numAccounts];
-        String tostring = "";
+        String tostring = "Account List:";
         for (int i = 0; i < numAccounts; i++) {
-            //if (loc == accountList[i]) {
-                
-                tostring += accountList[i].toString();
-            //}
+            
+            tostring += accountList[i].toString(); 
+            
         }
         return tostring;
     }
@@ -61,7 +58,7 @@ public class Bank {
         }
        else {
             System.out.println("Cannot find account or Balance invalid");
-    }
+        }
     }
     public boolean withdrawAccount(long accNum, double amt) {
         int loc = findAccount(accNum);
@@ -73,7 +70,7 @@ public class Bank {
 
         accountList[loc].withdraw(amt);
         return true;
-    }
+        }
     }
     
     public boolean transfer(long accNumFrom, long accNumTo, double amt) {
