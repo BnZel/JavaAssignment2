@@ -1,4 +1,3 @@
-package assignment2;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.event.ActionEvent;
@@ -11,18 +10,21 @@ import javafx.scene.layout.*;
 public class Assignment2 extends Application implements EventHandler<ActionEvent> {
     private  Scene home,addScene,depositScene,withdrawScene,listScene,transferScene;
     Stage window;  // represents main Stage globally
-    Button btnAddMenu,btnDepositMenu,btnWithdrawMenu,btnTransferMenu,btnListMenu,btnAdd,btnHome,btnListHome;
-    TextField custName,custAccNum,custBalance,accountList;
+    Button btnAddMenu,btnDepositMenu,btnWithdrawMenu,btnTransferMenu,btnListMenu,btnAdd,btnListHome,btnHome;
+    
+    Button btnDepositBack,btnWithdrawBack,btnTransferBack,btnListBack,btnAddBack;
+    TextField custName,custAccNum,custBalance;
     
     Bank bankMan;
-    Account acc;
+    
+    
+    TextArea accountList;
     
     Button btnWithdraw;
     TextField deposAmt,withdrawAmt,custToAccNum,custTransferAmt;
-    
-    //comment
-    public void init(){
         
+    public void init(){
+        bankMan = new Bank(10000);
     }
     
     public void start(Stage primaryStage){
@@ -74,12 +76,12 @@ public class Assignment2 extends Application implements EventHandler<ActionEvent
         btnAdd = new Button("Add Account");
         btnAdd.setOnAction(this);
         
-        btnHome = new Button("Back");
-        btnHome.setOnAction(this);
+        btnAddBack = new Button("Back");
+        btnAddBack.setOnAction(this);
         
         VBox addLayout =new VBox();
         
-        addLayout.getChildren().addAll(lblAddMenu,lblName,custName,lblAccNum,custAccNum,lblBalance,custBalance,btnAdd,btnHome);
+        addLayout.getChildren().addAll(lblAddMenu,lblName,custName,lblAccNum,custAccNum,lblBalance,custBalance,btnAdd,btnAddBack);
         
         addScene = new Scene(addLayout,500,500);
         
@@ -93,18 +95,15 @@ public class Assignment2 extends Application implements EventHandler<ActionEvent
         btnAdd = new Button("Deposit");
         btnAdd.setOnAction(this);
         
-        btnHome = new Button("Back");   
-        btnHome.setOnAction(this);
+        btnDepositBack = new Button("Back");   
+        btnDepositBack.setOnAction(this);
                        
         VBox depositLayout = new VBox();
         
-        depositLayout.getChildren().addAll(lblAcNum,custAccNum,lblAmount,deposAmt,btnAdd,btnHome);
+        depositLayout.getChildren().addAll(lblAcNum,custAccNum,lblAmount,deposAmt,btnAdd,btnDepositBack);
         
         depositScene = new Scene(depositLayout,500,500);
-        
-        window.setScene(home);
-        window.show();
-        
+                
         //===============setting up Withdraw Scene==============
         Label lblAcccNum = new Label("Account#:");
         custAccNum = new TextField();
@@ -115,19 +114,16 @@ public class Assignment2 extends Application implements EventHandler<ActionEvent
         btnWithdraw = new Button("Withdraw");
         btnWithdraw.setOnAction(this);
         
-        btnListHome = new Button("Back");
-        btnListHome.setOnAction(this);
+        btnWithdrawBack = new Button("Back");
+        btnWithdrawBack.setOnAction(this);
         
-        btnListHome.setMaxWidth(Double.MAX_VALUE);
+        btnWithdrawBack.setMaxWidth(Double.MAX_VALUE);
         
         VBox withdrawLayout =new VBox();
         
-        withdrawLayout.getChildren().addAll(lblAcccNum,custAccNum,lblWithdrawAmt,withdrawAmt,btnListHome);
+        withdrawLayout.getChildren().addAll(lblAcccNum,custAccNum,lblWithdrawAmt,withdrawAmt,btnWithdrawBack);
         
-        withdrawScene = new Scene (withdrawLayout,500,500);
-         
-        window.setScene(home);
-        window.show();
+        withdrawScene = new Scene (withdrawLayout,500,500);        
         
         //===============setting up Transfer Scene============
         Label lblFromAccNum = new Label("From Account#:");
@@ -139,32 +135,30 @@ public class Assignment2 extends Application implements EventHandler<ActionEvent
         Label lblTransferAmt = new Label("Transfer Amount:");
         custTransferAmt = new TextField();
                 
-        btnListHome = new Button("Back");
-        btnListHome.setOnAction(this);
+        btnTransferBack = new Button("Back");
+        btnTransferBack.setOnAction(this);
         
-        btnListHome.setMaxWidth(Double.MAX_VALUE);
+        btnTransferBack.setMaxWidth(Double.MAX_VALUE);
         
         VBox transferLayout =new VBox();
         
-        transferLayout.getChildren().addAll(lblFromAccNum,custAccNum,lblToAccNum,custToAccNum,lblTransferAmt,custTransferAmt,btnListHome);
+        transferLayout.getChildren().addAll(lblFromAccNum,custAccNum,lblToAccNum,custToAccNum,lblTransferAmt,custTransferAmt,btnTransferBack);
         
         transferScene = new Scene (transferLayout,500,500);
          
-        window.setScene(home);
-        window.show();
                 
         // ===============setting up List Scene===============
         Label lblShow = new Label("List of accounts...");
-        accountList = new TextField();
+        accountList = new TextArea();
         
-        btnListHome = new Button("Back");
-        btnListHome.setOnAction(this);
+        btnListBack = new Button("Back");
+        btnListBack.setOnAction(this);
         
-        btnListHome.setMaxWidth(Double.MAX_VALUE);
+        btnListBack.setMaxWidth(Double.MAX_VALUE);
         
         VBox listLayout =new VBox();
         
-        listLayout.getChildren().addAll(lblShow,accountList,btnListHome);
+        listLayout.getChildren().addAll(lblShow,accountList,btnListBack);
         
         listScene = new Scene (listLayout,500,500);
          
@@ -182,36 +176,51 @@ public class Assignment2 extends Application implements EventHandler<ActionEvent
         if (e.getSource()==btnAddMenu){
             System.out.println("add Menu btn pressed (on menu scene)");
             window.setScene(addScene);                              
-            if(e.getSource() == btnAdd){                
-                //String cusName = String.valueOf(custName.getText());
-                long accNum = Integer.valueOf(custAccNum.getText());
-                double amt  = Integer.valueOf(custBalance.getText());
-                acc = new Account(accNum,amt,custName.getText());                
-            }
+            
            
         }
+        
+        //PROBLEM: addAccount function works, doesn't display on textarea
+        if(e.getSource() == btnAdd){                
+                
+                long accNum = Long.valueOf(custAccNum.getText());
+                double amt  = Double.valueOf(custBalance.getText());
+                String nameStored = String.valueOf(custName.getText());
+                bankMan.addAccount(accNum,amt,nameStored);
+                
+                
+            }
+        
         if(e.getSource() == btnWithdrawMenu){
             System.out.println("withdraw menu btn pressed");
+            window.setScene(withdrawScene);
             if(e.getSource() == btnWithdraw){
                 long accNum = Long.valueOf(custAccNum.getText());
                 double amt = Double.valueOf(withdrawAmt.getText());
                 bankMan.withdrawAccount(accNum, amt);
             }
         }
+        
         if(e.getSource() == btnTransferMenu){
             System.out.println("transfer menu btn pressed (on menu scene)");
-            window.setScene(withdrawScene);
+            window.setScene(transferScene);
         }
+        
         if(e.getSource()==btnDepositMenu){
             System.out.println("deposit menu pressed");
             window.setScene(depositScene);
         }
+        
         if (e.getSource()==btnListMenu){
             System.out.println("list accounts btn pressed (on menu scene)");
+            accountList.setText(bankMan.printAccounts());
             window.setScene(listScene);
         }
-        if (e.getSource()==btnHome||e.getSource()==btnListHome){
-            System.out.println("add account btn pressed (on add scene or list scene)");
+        
+        if (e.getSource()==btnHome||e.getSource()==btnListHome || e.getSource()== btnAddBack ||
+                e.getSource()== btnWithdrawBack || e.getSource() == btnTransferBack 
+                || e.getSource() == btnDepositBack || e.getSource() ==btnListBack){
+            System.out.println("Back button pressed");
             window.setScene(home);
         }  
         
