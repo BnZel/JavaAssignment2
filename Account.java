@@ -1,5 +1,3 @@
-package assignment2;
-
 public class Account {
     
     private long accountNum;
@@ -44,6 +42,8 @@ public class Account {
         return false;
     }
     
-    public String toString(){ return "\nAccount number: " + getAccountNumber() 
-            + "\tBalance: " + getBalance() + "\tOwner:" + getOwner() + "\n"; }
+    public String toString(){ 
+        return "\nAccount number: " + getAccountNumber() 
+            + "\tBalance: " + getBalance() + "\tOwner:" + getOwner() + "\n";
+    }
 }
