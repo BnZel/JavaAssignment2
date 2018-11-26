@@ -1,5 +1,3 @@
-package javafxapplication1;
-
 public class Bank {
 
     private Account[] accountList;
